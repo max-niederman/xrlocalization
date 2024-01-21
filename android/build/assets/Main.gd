@@ -1,6 +1,7 @@
 extends Node3D
 
 var xr_interface: XRInterface
+var proxy_conn: PacketPeer
 
 func _ready():
 	xr_interface = XRServer.find_interface("OpenXR")
@@ -18,6 +19,14 @@ func _ready():
 			xr_interface.start_passthrough()
 	else:
 		print("OpenXR not initialized, please check if your headset is connected")
+	
+	proxy_conn = PacketPeerUDP.new()
+	proxy_conn.set_dest_address("192.168.0.159", 6000)
 
 func _process(delta):
-	print($XROrigin3D/XRCamera3D.global_transform)
+	var transform = $XROrigin3D/XRCamera3D.global_transform
+	
+	if proxy_conn.put_var(transform) != OK:
+		print("Failed to send transform to proxy.")
+	else:
+		print("Sent transform.")
