@@ -11,11 +11,12 @@ nt.startClient4("XRLocalization")
 
 # Set up the socket for UDP
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(('', 6000))
+sock.bind(('0.0.0.0', 6000))
 
 while True:
     data, addr = sock.recvfrom(52)
 
     mat = struct.unpack("i12f", data)[1:]
+    print("Received transform.")
 
     publisher.set(list(mat))

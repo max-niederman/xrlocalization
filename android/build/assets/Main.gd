@@ -21,7 +21,8 @@ func _ready():
 		print("OpenXR not initialized, please check if your headset is connected")
 	
 	proxy_conn = PacketPeerUDP.new()
-	proxy_conn.set_dest_address("192.168.0.159", 6000)
+	if proxy_conn.set_dest_address("192.168.0.159", 6000) != OK:
+		print("Failed to connect to proxy.")
 
 func _process(delta):
 	var transform = $XROrigin3D/XRCamera3D.global_transform
@@ -29,4 +30,4 @@ func _process(delta):
 	if proxy_conn.put_var(transform) != OK:
 		print("Failed to send transform to proxy.")
 	else:
-		print("Sent transform.")
+		print("Sent transform to proxy.")
